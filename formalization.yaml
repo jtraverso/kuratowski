@@ -1,0 +1,156 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Kuratowski's theorem"
+  description: >-
+    A Lean 4 / Mathlib formalization of Kuratowski's theorem: a finite graph is planar if and
+    only if it contains no subdivision of K5 and no subdivision of K3,3. Planarity is the
+    combinatorial notion (a rotation system of genus zero). The proof combines Wagner's minor
+    characterization (from the author's planarity library) with three new lemmas: a subdivision
+    of any finite graph H gives H as a minor; a K3,3 minor gives a K3,3 subdivision; a K5 minor
+    gives a K5 or a K3,3 subdivision. The last two rest on joining up to four terminals inside a
+    connected branch set to one centre or to two adjacent centres by internally disjoint paths.
+  authors:
+    - "Juan Pablo Traverso Gianini"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Juan Pablo Traverso Gianini"
+
+classification:
+  arxiv: ["math.CO"]
+  msc2020: ["05C10", "05C83"]
+
+sources:
+  - title: "Sur le problème des courbes gauches en Topologie"
+    authors:
+      - "Kazimierz Kuratowski"
+    id: "doi:10.4064/fm-15-1-271-283"
+    type: "paper"
+    location: "Fundamenta Mathematicae 15 (1930), 271–283"
+    relationship: "formalizes"
+    note: >-
+      Kuratowski's characterization of planar graphs by excluded subdivisions of K5 and K3,3,
+      with planarity in the combinatorial (rotation-system) sense. The formal proof derives it
+      from Wagner's minor characterization and does not follow Kuratowski's original argument.
+    license: "unknown"
+    author_endorsement: "n/a"
+  - title: "Über eine Eigenschaft der ebenen Komplexe"
+    authors:
+      - "Klaus Wagner"
+    type: "paper"
+    location: "Mathematische Annalen 114 (1937), 570–590"
+    relationship: "background"
+    note: "Wagner's minor characterization of planarity, used as the starting point (formalized in the author's planar-list-colouring entry)."
+    license: "unknown"
+    author_endorsement: "n/a"
+
+related_formalizations:
+  - id: "jtraverso/planar-list-colouring (Wagner's theorem and list colouring of planar graphs)"
+    relationship: "builds-on"
+    note: >-
+      The 33 modules under LeanPool/K5MinorFreeChoosability/ (combinatorial planarity, minors,
+      Wagner's theorem) are copied unchanged from the author's entry jtraverso/planar-list-colouring
+      at commit ec1eafbc091713857eb5683a46e460902b2d47b3, restricted to the import closure of
+      Wagner's theorem; they are the author's Lean Pool contribution K5MinorFreeChoosability.
+      The modules under Kuratowski/, Challenge.lean and Solution.lean are new.
+
+status:
+  scope: >-
+    Proved for finite simple graphs (any universe): Kuratowski's theorem, the passage from
+    subdivisions to minors for every finite H, and from K5 / K3,3 minors to subdivisions; plus
+    the sanity checks that K4 is planar and K5, K3,3 are not. Planarity means the existence of a
+    genus-zero rotation system; its equivalence with topological embeddability in the sphere is
+    classical but not formalized.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "autonomous"
+      models: ["Aristotle (Harmonic)"]
+      framework: "Aristotle CLI"
+      tool_setup: >-
+        Proved the terminal lemmas (Kuratowski/Terminal.lean) and the subdivision lemmas
+        (Kuratowski/TopToMinor.lean, Kuratowski/Subdivision.lean) from the formal statements and
+        proof plans, in two runs; earlier, most proofs of the planarity library (including the
+        decompositions behind Wagner's theorem) over several rounds. Every return was audited
+        (statements and headers unchanged, no added axioms) and rebuilt locally.
+      cost:
+        wall_time: "under one hour for the Kuratowski lemmas"
+        spend_usd: "not tracked"
+        hardware: "API-only"
+      prompting_notes: "Formal statements and proof plans supplied for each run."
+    - method: "agent"
+      models: ["Claude Opus 5.5"]
+      framework: "Claude Code (Anthropic)"
+      tool_setup: >-
+        Statement design (subdivision models, terminal lemmas), proof plans, integration and
+        review of the Aristotle returns, and the Palomar packaging (Challenge with copied
+        definitions; Solution with bridges to the library), checked with `lake build` and
+        `#print axioms` (Lean v4.35.0-rc3, Mathlib c55e6e786f49471c72fbddbec5415808896aec1e).
+      cost:
+        wall_time: "a few hours"
+        spend_usd: "subscription-based"
+        hardware: "local machine"
+      prompting_notes: "Natural-language instructions in Spanish, directed by the author."
+  spend_usd: "subscription-based"
+  notes: >-
+    The result and the route were chosen by the human author; the Lean proofs are AI-generated
+    and mechanically verified (no `sorry`, axioms limited to propext, Classical.choice and
+    Quot.sound, identical elaborated types for the Challenge/Solution pair).
+
+fidelity:
+  divergences: >-
+    Planarity is the combinatorial notion (genus-zero rotation system), not a topological
+    embedding; the classical equivalence is not formalized. A subdivision of H in G is given by an
+    injective choice of branch vertices and, for every ordered pair of adjacent vertices of H, a
+    path of G between their branch vertices containing no other branch vertex, paths of
+    different (unordered) edges of H meeting only at branch vertices; this is equivalent to G
+    containing a subgraph isomorphic to a subdivision of H. Minors are branch-set models.
+
+review:
+  status: "agent-reviewed"
+  reviewers:
+    - "Claude Opus 5.5 (AI agent in Claude Code, acting for the author)"
+  notes: >-
+    Agent review by Claude Opus 5.5, distinct from the mechanical verification: the agent
+    designed and compared the statements with Kuratowski's theorem and the standard lemmas
+    relating minors and topological minors, checked that the Aristotle returns left every
+    statement, definition and header unchanged, checked that the vendored planarity modules are
+    the author's published sources, and confirmed by `lake build`, `#print axioms` and a
+    comparison of the fully elaborated Challenge and Solution types that the proofs use no
+    `sorry` and only propext, Classical.choice and Quot.sound. The author directed the work and
+    approved the statements. No independent human mathematical review has been performed. The
+    result is classical; no mathematical novelty is claimed.
+
+alignment:
+  namespace: "KuratowskiTheorem"
+  statements:
+    - source: "Kuratowski (1930), main theorem"
+      lean: "KuratowskiTheorem.isPlanar_iff"
+      module: "Challenge"
+      status: "proved"
+      note: "Planar iff no subdivision of K5 and no subdivision of K3,3."
+    - source: "Standard lemma: topological minors are minors"
+      lean: "KuratowskiTheorem.isMinor_of_isTopologicalMinor"
+      module: "Challenge"
+      status: "proved"
+      note: "For every finite graph H."
+    - source: "Standard lemma: a K3,3 minor gives a K3,3 subdivision"
+      lean: "KuratowskiTheorem.isTopologicalMinor_K33_of_isMinor"
+      module: "Challenge"
+      status: "proved"
+    - source: "Standard lemma: a K5 minor gives a K5 or a K3,3 subdivision"
+      lean: "KuratowskiTheorem.isTopologicalMinor_of_isMinor_K5"
+      module: "Challenge"
+      status: "proved"
+    - source: "Sanity checks on the definition of planarity"
+      lean: "KuratowskiTheorem.isPlanar_K4"
+      module: "Challenge"
+      status: "proved"
+      note: "Also KuratowskiTheorem.not_isPlanar_K5 and KuratowskiTheorem.not_isPlanar_K33."
+
+acknowledgements: >-
+  Mathlib and the Lean community; Harmonic's Aristotle; Lean Pool.

@@ -1,0 +1,16 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "KuratowskiTheorem.isPlanar_K4",
+    "KuratowskiTheorem.not_isPlanar_K5",
+    "KuratowskiTheorem.not_isPlanar_K33",
+    "KuratowskiTheorem.isMinor_of_isTopologicalMinor",
+    "KuratowskiTheorem.isTopologicalMinor_K33_of_isMinor",
+    "KuratowskiTheorem.isTopologicalMinor_of_isMinor_K5",
+    "KuratowskiTheorem.isPlanar_iff"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": true
+}
